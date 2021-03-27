@@ -1,3 +1,7 @@
+body {
+    text-align: center;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -8,7 +12,7 @@
     /* margin-top: 100px; */
 }
 .container #instructions {
-    margin-top: 100px;
+    margin-top:125px; width:50%; text-align:center;
 }
 .container #start {
     background-color:darkgreen;
@@ -17,6 +21,10 @@
     color: cornsilk;
     font-size: larger;
     margin-top: 25px;
+}
+
+#buttonContainer {
+    display:flex; width:100px; flex-wrap:wrap; height:200px; align-items:center;
 }
 
 #timer {
