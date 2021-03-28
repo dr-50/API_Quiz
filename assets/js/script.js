@@ -8,9 +8,10 @@ var btnContainer = document.getElementById("btnContainer");
 var body= document.body;
 var decreaseTime = 2;
 var indexPlace = 0;
+var currentScore = 0;
+var timeLeft = 59;
 var scoreLocalStorage = localStorage.getItem("highScore");
 var scoreEl = document.getElementById("highScore");
-console.log(scoreLocalStorage);
 scoreEl.textContent="high score: "+ scoreLocalStorage;
 
 var questionEl = document.getElementById("question");
@@ -28,8 +29,7 @@ var questions = [
 ];
 
 
-var highScore = 0;
-var timeLeft = 59;
+
 
 function initialGame(){
     
@@ -37,14 +37,9 @@ function initialGame(){
 
 function startQuiz(){
 //remove good luck and start button
-
 luckEl.parentNode.removeChild(luckEl);
 startBtn.parentNode.removeChild(startBtn);
 pEl.parentNode.removeChild(pEl);
-
-
-// var questionEl = document.createElement('h2');
-//   body.appendChild(questionEl);
 
 var answerBtn1 = document.createElement('button');
 answerBtn1.id='answerBtn1';
@@ -79,6 +74,7 @@ function countDown() {
     } else if (timeLeft === 0) {
       timerEl.textContent = "Time Remaining: 0";
       clearInterval(timeInterval);
+      rematch();
     }
   }, 1000);
 }
@@ -89,51 +85,28 @@ function questionGenerator() {
     
     questionEl.textContent = questions[indexPlace].q;
   questionEl.setAttribute('style', 'margin-top:125px; width:100%;');
-  //body.appendChild(questionEl);
-
-//create div container for holding answer buttons
-  //var buttonContainer = document.createElement('div')
-  //buttonContainer.id='btnContainer';
-  //var buttonContainer
-  //buttonContainer.setAttribute('style', 'background-color:yellow; display:flex; width:100px; flex-wrap:wrap; height:200px; align-items:center; margin:auto;')
-  //body.appendChild(buttonContainer);
-
 
   // create buttons for selecting answers
-  //var answerBtn1 = document.createElement('button');
-  //answerBtn1.id='answerBtn1';
   var answerBtn1 = document.getElementById("answerBtn1")
   answerBtn1.onclick=function(){correctAnswerCheck()};
   answerBtn1.textContent = questions[indexPlace].a1;
   answerBtn1.setAttribute('style', 'background-color:lightblue; height: 40px; font-size:large;');
-  //buttonContainer.appendChild(answerBtn1);
+  
 
-
-  //var answerBtn2 = document.createElement('button');
-//   answerBtn2.id='answerBtn2';
     var answerBtn2 = document.getElementById("answerBtn2")
   answerBtn2.onclick=function(){correctAnswerCheck()};
   answerBtn2.textContent=questions[indexPlace].a2;
   answerBtn2.setAttribute('style', 'background-color:lightblue; height: 40px; font-size:large;');
-//   buttonContainer.appendChild(answerBtn2);
 
-//   var answerBtn3 = document.createElement('button');
-  
-//   answerBtn3.id='answerBtn3';
 var answerBtn3= document.getElementById("answerBtn3")
   answerBtn3.onclick=function(){correctAnswerCheck()};
   answerBtn3.textContent=questions[indexPlace].a3;
   answerBtn3.setAttribute('style', 'background-color:lightblue; height: 40px; font-size:large;');
-//   buttonContainer.appendChild(answerBtn3);
 
-//   var answerBtn4 = document.createElement('button');
-//   answerBtn4.id='answerBtn4';
 var answerBtn4= document.getElementById("answerBtn4")
   answerBtn4.onclick=function(){correctAnswerCheck()};
   answerBtn4.textContent=questions[indexPlace].a4;
   answerBtn4.setAttribute('style', 'background-color:lightblue; height: 40px; font-size:large;');
-  //buttonContainer.appendChild(answerBtn4);
-
 }
 
 
@@ -144,35 +117,11 @@ function correctAnswerCheck(){
         if (indexPlace<=(questions.length-1)){
         questionGenerator();
         }else {
-            alert("end of game");
-            highScore=(timeLeft+1);
-            console.log(highScore);
-            if(localStorage.getItem("highScore")===null){
-                localStorage.setItem("highScore",highScore);
-                var scoreLocalStorage = localStorage.getItem("highScore");
-                scoreEl.textContent="high score: "+ scoreLocalStorage;
-                console.log(scoreEl);
-            }
-            else if(highScore>localStorage.getItem("highScore")){
-                localStorage.setItem("highScore", highScore);
-                var scoreLocalStorage = localStorage.getItem("highScore");
-                scoreEl.textContent="high score: "+ scoreLocalStorage;
-                console.log(scoreEl);
-                alert("new high score set");
-                
-            }else{
-                alert("you didn't set a new high score");
-                
-            }
-            //localStorage.setItem("highScore", highScore);
-            timerEl=0;
+            rematch();
         }
-        //end of game screen
-
     }else{
         timeLeft=timeLeft-decreaseTime;
     }
-    
 }
 
 //function for starting game over
@@ -181,18 +130,33 @@ function rematch(){
     btn2Container.parentNode.removeChild(btn2Container);
     btn3Container.parentNode.removeChild(btn3Container);
     btn4Container.parentNode.removeChild(btn4Container);
-    questionEl.textContent = "Would you like to take the quiz again?";
+
+    currentScore=(timeLeft+1);
+    if(localStorage.getItem("highScore")===null){
+        localStorage.setItem("highScore",currentScore);
+        var scoreLocalStorage = localStorage.getItem("highScore");
+        scoreEl.textContent="high score: "+ scoreLocalStorage;
+        questionEl.textContent = "Your score: "+ currentScore + ". You set a new high score! Would you like to play again?";
+    }
+    else if(currentScore>localStorage.getItem("highScore")){
+        localStorage.setItem("highScore", currentScore);
+        var scoreLocalStorage = localStorage.getItem("highScore");
+        scoreEl.textContent="high score: "+ scoreLocalStorage;
+        questionEl.textContent = "Your score: "+ currentScore + ". You set a new high score! Would you like to play again?";
+    }else{
+        questionEl.textContent = "Your score: "+ currentScore + ". You didn't set a new high score, but you might next time! Would you like to play again?";
+    }
+    timerEl=0;
+
+
+    
     
     var playAgainBtn = document.createElement('button');
     playAgainBtn.id='playAgain';
     playAgainBtn.textContent = "Play Again"
-    playAgainBtn.onclick=function(){startQuiz()};
+    playAgainBtn.onclick=function(){location.reload()};
+    playAgainBtn.setAttribute('style', 'background-color: darkgreen; width: 100px; height: 70px; color: cornsilk; font-size: larger; margin-top: 25px;');
     btnContainer.appendChild(playAgainBtn)
-
-    var dontPlayBtn = document.createElement('button');
-    dontPlayBtn.id='dontPlayAgain';
-    dontPlayBtn.textContent = "Don't Play Again"
-    btnContainer.appendChild(dontPlayBtn)
 
 }
 
