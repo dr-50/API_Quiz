@@ -1,6 +1,3 @@
-// var initialInputEl=document.getElementById('initialsInput').style.display='none'; 
-// var initialLabelEl=document.getElementById('initialsLabel').style.display='none'; 
-
 var initialInputEl;
 var initialLabelEl;
 var initialInputContainer=document.getElementById("initialInputContainer");
@@ -35,13 +32,6 @@ var questions = [
   { q: "What javascript code allows you to select an element by it's id?", a1: "getElementByName" , a2: "getElementByClass", a3:"getElementById", a4:"This isn't possible through javascript", answer:"getElementById" },
   { q: "What is pseudocode?", a1: "Comments within the program to detail what's happening in the backend" , a2: "Fake code to confuse hackers", a3:"An ancient coding language", a4:"Fake code for added security", answer:"Comments within the program to detail what's happening in the backend" }
 ];
-
-
-
-
-function initialGame(){
-    
-}
 
 function startQuiz(){
 //remove good luck and start button
@@ -202,9 +192,12 @@ function logHighScore(){
             else {
                 localStorage.setItem("highScore", initialsValue+"-"+currentScore);
             }
+            
         });
         
 }
+
+
 
 
 startBtn.addEventListener("click", startQuiz);
