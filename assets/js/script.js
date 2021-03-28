@@ -1,21 +1,29 @@
+// var initialInputEl=document.getElementById('initialsInput').style.display='none'; 
+// var initialLabelEl=document.getElementById('initialsLabel').style.display='none'; 
+
+var initialInputEl;
+var initialLabelEl;
+var initialInputContainer=document.getElementById("initialInputContainer");
 var timerEl = document.getElementById("timer");
 var startBtn = document.getElementById("start");
 var containerEl = document.getElementById("container");
 var pEl = document.getElementById("instructions");
 var luckEl = document.getElementById("luck");
 var btnContainer = document.getElementById("btnContainer");
-// var h2El = document.createElement("h2");
 var body= document.body;
 var decreaseTime = 2;
 var indexPlace = 0;
 var currentScore = 0;
 var timeLeft = 59;
 var scoreLocalStorage = localStorage.getItem("highScore");
-var scoreEl = document.getElementById("highScore");
-scoreEl.textContent="high score: "+ scoreLocalStorage;
-
+//var scoreEl = document.getElementById("highScore");
+//scoreEl.textContent="high score: "+ scoreLocalStorage;
+ var correctWrongDisplayEl = document.getElementById("correctWrongDisplay");
 var questionEl = document.getElementById("question");
-document.get
+// document.get
+var btnSubmitScore;
+
+
 
 var answerBtn1
 var answerBtn2
@@ -113,14 +121,17 @@ var answerBtn4= document.getElementById("answerBtn4")
 // functions for checking the correct answer 
 function correctAnswerCheck(){
     if(event.target.textContent===questions[indexPlace].answer){
+        correctWrongDisplayEl.textContent=""
         indexPlace++;
         if (indexPlace<=(questions.length-1)){
+        correctWrongDisplayEl.textContent=""
         questionGenerator();
         }else {
             rematch();
         }
     }else{
         timeLeft=timeLeft-decreaseTime;
+        correctWrongDisplayEl.textContent="Wrong!"
     }
 }
 
@@ -135,16 +146,20 @@ function rematch(){
     if(localStorage.getItem("highScore")===null){
         localStorage.setItem("highScore",currentScore);
         var scoreLocalStorage = localStorage.getItem("highScore");
-        scoreEl.textContent="high score: "+ scoreLocalStorage;
+        //scoreEl.textContent="high score: "+ scoreLocalStorage;
         questionEl.textContent = "Your score: "+ currentScore + ". You set a new high score! Would you like to play again?";
+        logHighScore();
+        // initialLabelEl
     }
     else if(currentScore>localStorage.getItem("highScore")){
         localStorage.setItem("highScore", currentScore);
         var scoreLocalStorage = localStorage.getItem("highScore");
-        scoreEl.textContent="high score: "+ scoreLocalStorage;
+        //scoreEl.textContent="high score: "+ scoreLocalStorage;
         questionEl.textContent = "Your score: "+ currentScore + ". You set a new high score! Would you like to play again?";
+        logHighScore();
     }else{
         questionEl.textContent = "Your score: "+ currentScore + ". You didn't set a new high score, but you might next time! Would you like to play again?";
+        logHighScore();
     }
     timerEl=0;
 
@@ -160,6 +175,36 @@ function rematch(){
 
 }
 
+function logHighScore(){
+    var initialLabelEl=document.createElement("Label");
+        initialLabelEl.htmlFor='initialInput';
+        initialLabelEl.id="initialLabel";
+        initialLabelEl.innerHTML="Enter your initials: ";
+        initialInputContainer.appendChild(initialLabelEl);
+
+        var initialInputEl=document.createElement('input');
+        initialInputEl.id='initialInput';
+        initialInputContainer.appendChild(initialInputEl);
+
+        var btnSubmitScore = document.createElement('button');
+        btnSubmitScore.id='submitscore';
+        btnSubmitScore.textContent="Submit Score"
+        btnSubmitScore.setAttribute('style', 'margin-left:10px')
+        initialInputContainer.appendChild(btnSubmitScore);
+
+        
+
+        btnSubmitScore.addEventListener("click",function(){
+            initialsValue=document.getElementById('initialInput').value;
+            if (scoreLocalStorage!==null){
+            localStorage.setItem("highScore", scoreLocalStorage + " | " + initialsValue+"-"+currentScore);
+            console.log(initialsValue);}
+            else {
+                localStorage.setItem("highScore", initialsValue+"-"+currentScore);
+            }
+        });
+        
+}
 
 
 startBtn.addEventListener("click", startQuiz);
